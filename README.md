@@ -75,12 +75,7 @@ No revisions are applied: the model uses EIA storage as published at the time. T
 The estimated equation is
 
 $$
-\log P_F - \log P_{F-12}
-= \alpha
-+ \beta_s \cdot \text{StorageYoY}_F
-+ \beta_b \cdot \text{BrentYoY}_F
-+ \beta_l \cdot \log P_{F-12}
-+ \varepsilon_F .
+\log P_F - \log P_{F-12} = \alpha + \beta_s \cdot \text{StorageYoY}_F + \beta_b \cdot \text{BrentYoY}_F + \beta_l \cdot \log P_{F-12} + \varepsilon_F .
 $$
 
 The three regressors have a simple reading:
