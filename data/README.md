@@ -85,7 +85,7 @@ It contains EIA monthly production, consumption, imports, exports and storage se
 | Consumption | `cons_total`, `cons_power`, `cons_residential`, `cons_industrial` | balance forward |
 | Balances | `total_supply`, `total_demand`, `implied_balance`, `balance_dry` | diagnostics |
 
-**It contains no price columns and nothing licensed.** The panel is derived from public EIA monthly series. The last observation is 2026-07; later formation months are model estimates built from the latest available vintage, so a later panel vintage will change the last few rows of the diagnostics.
+**It contains no price columns and nothing licensed.** The panel is derived from public EIA monthly series. The last observation is 2026-07; later formation months are model estimates built from the latest available vintage. A rebuild with this panel therefore reproduces the model through 2026-07; the 2026-08 and 2026-09 diagnostics rows come from the later build vintage.
 
 ### `eia_weekly_inventory.xlsx`
 
