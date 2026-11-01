@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Private inputs and generated model outputs
+data/raw/
+data/plots/
+plots/
+data/*.xlsx
+data/FFV_history_natgas_brent.csv
+data/FFV_history_natgas_ukgas.csv
+
+# Review artefacts
+README.docx
+README.html
+_word_media/
