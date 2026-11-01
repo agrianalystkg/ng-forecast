@@ -1,6 +1,6 @@
 # Model statistics
 
-Derived from the model workbooks and reproduced by `data/ffv_brent_model_diagnostics.csv`. The Brent row is the one shown in the README exhibit.
+Brent statistics are reproduced by `data/ffv_brent_model_diagnostics.csv`; UK gas statistics come from the UK gas model workbook (`04e`).
 
 ## Fit
 

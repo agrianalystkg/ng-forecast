@@ -27,13 +27,13 @@ Outputs:
     wide    natgas_fundamental_history_brent.xlsx sheets 'long' and 'wide'
             (storage path T..T-23 + 12m ratio)
 
-Inputs (not shipped; obtain under your own Barchart/ICE account):
-        data/raw/nymex_natgas_master.csv   (or NG_PRICES_CSV)
-        data/raw/ice_brent_master.csv      (or BRENT_CSV)
-        data/gas_snd_monthly.xlsx          (assembled monthly fundamentals)
-        data/eia_weekly_inventory.xlsx     (public EIA series)
-        data/us_daily_anomaly.parquet      (public NOAA-derived anomalies)
-        data/wx_monthly_exog.parquet       (monthly weather regressors)
+Inputs:
+        data/raw/nymex_natgas_master.csv   (or NG_PRICES_CSV; private)
+        data/raw/ice_brent_master.csv      (or BRENT_CSV; private)
+        data/gas_snd_monthly.xlsx          (shipped public EIA monthly panel)
+        data/eia_weekly_inventory.xlsx     (shipped public EIA series)
+        data/us_daily_anomaly.parquet      (shipped NOAA-derived anomalies)
+        data/wx_monthly_exog.parquet       (shipped monthly weather regressors)
 """
 import os
 import numpy as np

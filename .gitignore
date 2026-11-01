@@ -8,7 +8,9 @@ venv/
 data/raw/
 data/plots/
 plots/
-data/*.xlsx
+data/04d_*.xlsx
+data/04e_*.xlsx
+data/natgas_fundamental_history_*.xlsx
 data/FFV_history_natgas_brent.csv
 data/FFV_history_natgas_ukgas.csv
 

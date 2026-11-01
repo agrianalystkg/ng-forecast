@@ -19,10 +19,10 @@ Brent history is the monthly average of the front-month ICE Brent contract.
 For future formation months the current crude forward curve is used, so the
 forward FFV follows a market-implied crude path rather than a flat path.
 
-Inputs (not shipped; obtain under your own Barchart/ICE account):
-    data/raw/nymex_natgas_master.csv      (or NG_PRICES_CSV)
-    data/raw/ice_brent_master.csv         (or BRENT_CSV)
-    data/gas_snd_monthly.xlsx             (assembled monthly fundamentals)
+Inputs:
+    data/raw/nymex_natgas_master.csv      (or NG_PRICES_CSV; private)
+    data/raw/ice_brent_master.csv         (or BRENT_CSV; private)
+    data/gas_snd_monthly.xlsx             (shipped public EIA monthly panel)
 Outputs
     data/04d_pooled_yoy_brent_model.xlsx
     data/plots/04d_pooled_*.png

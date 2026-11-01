@@ -47,9 +47,11 @@ The two anchors answer the same question with a different external driver:
 | NYMEX NG futures, per contract | daily | Barchart, own account | formation-month price and target | No |
 | ICE Brent front month and forward curve | daily | Barchart/ICE, own account | Brent YoY and forward path | No |
 | ICE UK NBP front month and forward curve | daily | Barchart/ICE, own account | UK gas YoY and forward path | No |
-| EIA weekly Lower-48 storage | weekly | [EIA](https://www.eia.gov/naturalgas/storage/) | storage level and YoY | Public, not shipped |
-| NOAA temperatures | daily | [NOAA/NCEI](https://www.ncei.noaa.gov/) | GWDD and storage nowcast | Public, not shipped |
-| Assembled monthly fundamentals | monthly | built from EIA/NOAA and price data | point-in-time storage vintage | No |
+| EIA weekly Lower-48 storage | weekly | [EIA](https://www.eia.gov/naturalgas/storage/) | storage level and YoY | Public, shipped |
+| NOAA temperatures | daily | [NOAA/NCEI](https://www.ncei.noaa.gov/) | GWDD and storage nowcast | Public, shipped |
+| Assembled monthly fundamentals | monthly | built from public EIA monthly series | storage, production, trade and consumption panel | Public, shipped |
+
+The public panels needed to rebuild the model are in `data/`; only the licensed price masters are private.
 
 ### Point-in-time rules
 
@@ -68,7 +70,7 @@ The panel is assembled as follows:
 3. Brent and UK gas become `log(Price_F / Price_{F-12})`.
 4. The target is `log P_F − log P_{F-12}`.
 
-No revisions are applied: the model uses EIA storage as published at the time. That is a small implicit look-ahead and is discussed under [limitations](#limitations).
+EIA storage is used as currently published: later revisions are not reflected in the signal, so there is a small implicit look-ahead. This is discussed under [limitations](#limitations).
 
 ## The model
 
@@ -108,6 +110,8 @@ The model is deliberately small: three regressors, no full-sample fit, no per-co
 
 The mean residual is −0.05 log points, so the model is slightly optimistic on average. That is small relative to the residual standard deviation of 0.23, but it is the kind of thing worth stating rather than hiding.
 
+Full statistics for both anchors: [`results/model_stats.md`](results/model_stats.md).
+
 ### Coefficient stability
 
 | Coefficient | Mean | Range | 2022-12 | 2026-09 |
@@ -132,6 +136,19 @@ where `MAE` is the mean absolute error of the price-level prediction on all hist
 
 It is a wide band. Across the point-in-time history the average width is about 50 % of the mid, or roughly ±25 %.
 
+Latest Brent snapshot, run date 2026-10-15:
+
+| Contract | Mid | Lower | Upper |
+|---|---:|---:|---:|
+| NOV/26 | 3.72 | 2.54 | 4.90 |
+| DEC/26 | 4.22 | 3.04 | 5.40 |
+| JAN/27 | 4.12 | 2.94 | 5.30 |
+| FEB/27 | 3.83 | 2.65 | 5.01 |
+| MAR/27 | 4.13 | 2.95 | 5.31 |
+| APR/27 | 4.77 | 3.59 | 5.95 |
+
+The full 333-month history is in `data/FFV_history_natgas_brent_sim.csv`; the UK gas history is in `data/FFV_history_natgas_ukgas_sim.csv`.
+
 The trading rule that uses the range lives in [`natgas`](https://github.com/agrianalystkg/natgas): the distance from the mid is scaled by half the band width, capped at ±3, with a 28-business-day slope filter for direction. It is not reproduced here.
 
 ## Brent vs UK gas
@@ -155,7 +172,7 @@ In the `natgas` study the two signals are 0.62 correlated monthly. In that study
 - The Brent beta is not stable through 2022. The UK gas anchor mitigates this, but it is the same idea with a different driver, not a structural break model.
 - EIA storage is used as currently published. Later revisions are not reflected, so there is a small implicit look-ahead.
 - The band is wide, and a wide band is not a hedge against a wrong mid.
-- The 120-month window and 0.985 decay came from a sensitivity study. They sit on a broad plateau; the full grid is deliberately not reproduced here.
+- The 120-month window and 0.985 decay came from a sensitivity study and sit on a broad plateau.
 - The raw data are licensed. The model is reproducible only with your own Barchart/ICE account.
 - This is a research output, not investment advice.
 
@@ -168,19 +185,25 @@ python forecasting/plot_model_diagnostics.py
 
 The chart is regenerated from `data/ffv_brent_model_diagnostics.csv` and needs no raw price data.
 
-To rebuild the model and the diagnostics, put the raw masters under `data/raw/` (or point `NG_PRICES_CSV`, `BRENT_CSV` and `UKGAS_CSV` at them), add `data/gas_snd_monthly.xlsx`, then run
+The public inputs are shipped: `data/gas_snd_monthly.xlsx` (EIA monthly supply/demand panel, no price columns), `data/eia_weekly_inventory.xlsx`, `data/us_daily_anomaly.parquet` and `data/wx_monthly_exog.parquet`. Only the licensed price masters are private.
+
+To rebuild the model and the diagnostics, put your own `nymex_natgas_master.csv` and `ice_brent_master.csv` under `data/raw/` (or set `NG_PRICES_CSV` and `BRENT_CSV`), then run
 
 ```bash
 python forecasting/04d_gas_yoy_price_model_brent.py
 ```
 
-The script writes `data/ffv_brent_model_diagnostics.csv` when `store_coefs=True`, which is the setting used for the main run. The simulations additionally need `data/eia_weekly_inventory.xlsx`, `data/us_daily_anomaly.parquet` and `data/wx_monthly_exog.parquet`; see [`data/README.md`](data/README.md).
+For the UK gas anchor, also put `uk_natural_gas_master.csv` under `data/raw/` or set `UKGAS_CSV`, then run `04e`.
+
+The script writes `data/ffv_brent_model_diagnostics.csv` when `store_coefs=True`, which is the setting used for the main run. The simulations use the same price masters plus the shipped public panels; see [`data/README.md`](data/README.md) for the exact files and columns.
 
 The trading study, the rule and the book are in [`natgas`](https://github.com/agrianalystkg/natgas).
 
 ## Data availability
 
 Raw futures and gas price data are downloaded from Barchart/ICE through my own account, subject to their terms, and are not redistributed. Reproducing the model requires your own subscription. EIA storage and NOAA weather data are public. The repo ships derived model diagnostics and point-in-time FFV histories, not the raw price data.
+
+The repo also ships the public EIA monthly supply/demand panel and the NOAA-derived weather files; only the price masters are private.
 
 ## Repository layout
 
@@ -196,6 +219,10 @@ ng-forecast/
 │   ├── ffv_brent_model_diagnostics.csv
 │   ├── FFV_history_natgas_brent_sim.csv
 │   ├── FFV_history_natgas_ukgas_sim.csv
+│   ├── gas_snd_monthly.xlsx
+│   ├── eia_weekly_inventory.xlsx
+│   ├── us_daily_anomaly.parquet
+│   ├── wx_monthly_exog.parquet
 │   └── README.md
 ├── images/
 │   └── ffv_brent_model.png

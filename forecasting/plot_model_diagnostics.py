@@ -70,7 +70,7 @@ def panel_storage(ax, df):
     slope, intercept = np.polyfit(x, y, 1)
     xs = np.linspace(x.min(), x.max(), 100)
     ax.plot(xs, slope * xs + intercept, color=GREY, linestyle="--",
-            linewidth=1.1, label=f"raw slope {slope:+.2f}")
+            linewidth=1.1, label=f"raw univariate slope {slope:+.2f}")
 
     # binned median of the raw relationship
     bins = pd.qcut(x, 10, duplicates="drop")
@@ -88,9 +88,9 @@ def panel_storage(ax, df):
     ax.grid(True, alpha=0.3, linewidth=0.6)
 
     b = df["beta_storage"]
-    note = (f"model $\\beta_{{storage}}$ mean {b.mean():+.2f}\n"
-            f"range {b.min():+.2f} to {b.max():+.2f}\n"
-            "controls for Brent and the lagged price")
+    note = (f"model $\\beta_{{storage}}$ {b.mean():+.2f} "
+            f"(range {b.min():+.2f} to {b.max():+.2f})\n"
+            "conditional on Brent and the lagged price")
     ax.text(0.03, 0.04, note, transform=ax.transAxes, va="bottom", ha="left",
             fontsize=8.8, color=GREY,
             bbox=dict(boxstyle="round,pad=0.35", facecolor="white",
@@ -195,11 +195,6 @@ def main():
     panel_storage(ax1, df)
     panel_stability(fig.add_subplot(mid[0, 0]), fig.add_subplot(mid[1, 0]), df)
     panel_fit(fig.add_subplot(right[0, 0]), fig.add_subplot(right[1, 0]), df)
-
-    fig.text(0.01, 0.015,
-             "Rolling WLS, three regressors, monthly refit, one step ahead. "
-             "Shaded area: 2022.",
-             fontsize=8.5, color=GREY)
 
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     fig.savefig(OUT, dpi=140, bbox_inches="tight", facecolor="white")

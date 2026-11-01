@@ -14,10 +14,10 @@ UK gas history is the monthly average of the front-month ICE UK NBP (NF)
 contract. For future formation months the current UK gas forward curve is
 used, so the forward FFV follows a market-implied path rather than a flat one.
 
-Inputs (not shipped; obtain under your own Barchart/ICE account):
-    data/raw/nymex_natgas_master.csv      (or NG_PRICES_CSV)
-    data/raw/uk_natural_gas_master.csv    (or UKGAS_CSV)
-    data/gas_snd_monthly.xlsx             (assembled monthly fundamentals)
+Inputs:
+    data/raw/nymex_natgas_master.csv      (or NG_PRICES_CSV; private)
+    data/raw/uk_natural_gas_master.csv    (or UKGAS_CSV; private)
+    data/gas_snd_monthly.xlsx             (shipped public EIA monthly panel)
 Outputs
     data/04e_pooled_yoy_ukgas_model.xlsx
     data/plots/04e_pooled_*.png
